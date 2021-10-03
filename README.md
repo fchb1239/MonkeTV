@@ -1,5 +1,5 @@
 # MonkeTV
-Adds a TV into Gorilla Tag
+This mod lets you watch videos in Gorilla Tag!
 
 Add your own videos!
 
@@ -10,3 +10,6 @@ Put the names into this txt!
 ![](GitHub/txt_example.png)
 
 Then watch your videos ingame!
+
+# Networking
+If you and your friend has the same video installed you can click the syn button located next to the TV and watch your videos together.
