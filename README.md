@@ -17,5 +17,28 @@ Then watch your videos ingame!
 If you and your friend has the same video installed you can click the syn button located next to the TV and watch your videos together.
 
 
+The supported video file types are:
 
-This mod only supports mp4 files, as far as I know.
+.asf
+
+.av
+
+.dv
+
+.m4v
+
+.mov
+
+.mp4
+
+.mpg
+
+.mpeg
+
+.ogv
+
+.vp8
+
+.webm
+
+.wmv
