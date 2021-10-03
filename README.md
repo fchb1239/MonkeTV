@@ -10,6 +10,7 @@ Put the names into this txt!
 ![](GitHub/txt_example.png)
 
 Then watch your videos ingame!
+![](GitHub/ingame_example.jpg)
 
 # Networking
 If you and your friend has the same video installed you can click the syn button located next to the TV and watch your videos together.
