@@ -16,4 +16,4 @@ If you and your friend has the same video installed you can click the syn button
 
 
 
-This mod only supports mp4 files.
+This mod only supports mp4 files, as far as I know.
