@@ -13,3 +13,7 @@ Then watch your videos ingame!
 
 # Networking
 If you and your friend has the same video installed you can click the syn button located next to the TV and watch your videos together.
+
+
+
+This mod only supports mp4 files.
