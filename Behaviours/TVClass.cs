@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using System.IO;
 using System.Reflection;
@@ -104,7 +104,7 @@ namespace MonkeTV.Behaviours
         {
             if(currentlySeclected < videos.Count)
             {
-                currentlySeclected = currentlySeclected + 1;
+                currentlySeclected++;
                 Console.WriteLine("Just went forward: " + currentlySeclected);
             }
             VideoPlay();
@@ -112,9 +112,9 @@ namespace MonkeTV.Behaviours
 
         public void VideoPlayBackward()
         {
-            if (currentlySeclected > videos.Count)
+            if (currentlySeclected > 0)
             {
-                currentlySeclected = currentlySeclected - 1;
+                currentlySeclected--;
                 Console.WriteLine("Just went backward: " + currentlySeclected);
             }
             VideoPlay();
