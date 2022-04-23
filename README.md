@@ -7,4 +7,4 @@ Add your own videos
 
 Then watch your videos ingame
 
-![](https://user-images.githubusercontent.com/29258204/164886760-40848747-22a6-412e-b596-8092d2daf3b5.jpg)
+![](https://user-images.githubusercontent.com/29258204/164886765-a4ca2c51-c46b-4635-83d7-4d722e90a043.jpg)
