@@ -249,6 +249,7 @@ namespace MonkeTV.Behaviours
         {
             SetURL();
             tPlayer.Play();
+            curText.text = tPlayer.isPaused ? "PAUSED" : "PLAYING";
             StartCoroutine(ShowMessage($"PLAYING {vidNames[currentlySeclected].ToString().ToUpper()}"));
         }
 

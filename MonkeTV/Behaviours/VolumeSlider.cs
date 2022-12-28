@@ -30,8 +30,13 @@ namespace MonkeTV.Behaviours
         internal void OnTriggerEnter(Collider collider)
         {
             if (!(colliders.Count is 0) && colliders.Contains(collider)) return;
+
             colliders.Add(collider);
-            if (colliders.Count is 1) cDrag = true;
+            if (colliders.Count is 1)
+            {
+                cDrag = true;
+                GorillaTagger.Instance.StartVibration(collider.GetComponent<GorillaTriggerColliderHandIndicator>().isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
+            }
         }
 
         internal void LateUpdate()
@@ -48,6 +53,7 @@ namespace MonkeTV.Behaviours
                     if (cDist > 0.05f)
                     {
                         colliders.Remove(collider);
+                        GorillaTagger.Instance.StartVibration(collider.GetComponent<GorillaTriggerColliderHandIndicator>().isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
                         if (colliders.Count is 0) cDrag = false;
                         if (cDrag is false)
                         {
