@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace MonkeTV.Behaviours
 {
@@ -35,7 +36,7 @@ namespace MonkeTV.Behaviours
             if (colliders.Count is 1)
             {
                 cDrag = true;
-                GorillaTagger.Instance.StartVibration(collider.GetComponent<GorillaTriggerColliderHandIndicator>().isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
+                GorillaTagger.Instance.StartVibration(collider.GetComponent<GorillaTriggerColliderHandIndicator>().isLeftHand, GorillaTagger.Instance.tapHapticStrength / 3f, GorillaTagger.Instance.tapHapticDuration);
             }
         }
 
@@ -52,8 +53,11 @@ namespace MonkeTV.Behaviours
                     float cDist = Vector3.Distance(gameObject.transform.position, collider.transform.position);
                     if (cDist > 0.05f)
                     {
+                        int cIndex = colliders.FindIndex(a => a == collider);
+
+                        if (cIndex is 0) GorillaTagger.Instance.StartVibration(collider.GetComponent<GorillaTriggerColliderHandIndicator>().isLeftHand, GorillaTagger.Instance.tapHapticStrength / 3f, GorillaTagger.Instance.tapHapticDuration);
                         colliders.Remove(collider);
-                        GorillaTagger.Instance.StartVibration(collider.GetComponent<GorillaTriggerColliderHandIndicator>().isLeftHand, GorillaTagger.Instance.tapHapticStrength / 2f, GorillaTagger.Instance.tapHapticDuration);
+
                         if (colliders.Count is 0) cDrag = false;
                         if (cDrag is false)
                         {
