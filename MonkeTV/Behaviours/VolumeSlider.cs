@@ -17,7 +17,7 @@ namespace MonkeTV.Behaviours
             // Regarding "ModeSelectButton" it was just something random
             foreach (var mButton in Resources.FindObjectsOfTypeAll<ModeSelectButton>())
             {
-                if (mButton.gameObject.name == "Casual")
+                if (mButton.gameObject.name is "Casual")
                 {
                     baseButton = mButton;
                     break;
