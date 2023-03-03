@@ -48,9 +48,12 @@ namespace MonkeTV.Behaviours
             float minutes = Mathf.FloorToInt(time / 60);
             float seconds = Mathf.FloorToInt(time % 60);
             Plugin.Instance.tClass.ShowMessageMethod(string.Concat("TIME: ", string.Format("{0:00}:{1:00}", minutes, seconds)));
+
+            float yPos = 12.68741f - GetComponent<Slider>()._Position((float)Plugin.Instance.tClass.tPlayer.time / (float)Plugin.Instance.tClass.tPlayer.length, 12.68741f, 12.30003f);
+            gameObject.transform.position = new Vector3(gameObject.transform.position.x, yPos, gameObject.transform.position.z);
         }
 
-        internal void Update()
+        internal void LateUpdate()
         {
             if (colliders.Count > 0)
             {
