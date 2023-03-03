@@ -18,7 +18,8 @@ namespace MonkeTV.Behaviours
         // Videos
         public string fLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         public List<string> vidNames = new List<string>();
-        internal int currentlySeclected;
+        public bool isPaused;
+        internal int currentlySelected;
 
         // Objects
         public GameObject tStand;
@@ -27,13 +28,15 @@ namespace MonkeTV.Behaviours
         internal GameObject bForward;
         internal GameObject bBackward;
         internal GameObject bPause;
+        internal GameObject mSlider;
         internal GameObject vSlider;
         internal Font utopiumFont;
         internal Text curText;
         internal Text tvInfo;
 
         // Notification
-        internal int cDisplay = -1;
+        public IEnumerator iEnum;
+        public float ReportedTime = Time.time;
 
         internal void Start()
         {
@@ -49,7 +52,8 @@ namespace MonkeTV.Behaviours
             bPause = CreateButton("pause", new Vector3(-63.24147f, 12.317f, -82.05215f), Quaternion.Euler(0f, -127.393f, 0), new Vector3(0.1651334f, 0.07108399f, 0.03031021f));
 
             // Slider initialization
-            vSlider = CreateSlider("volume", new Vector3(-63.054f, 12.68741f, -82.297f), Quaternion.Euler(0f, -127.393f, 0), new Vector3(0.04f, 0.04f, 0.04f));
+            mSlider = CreateSlider("volume", new Vector3(-63.054f, 12.68741f, -82.297f), Quaternion.Euler(0f, -127.393f, 0), new Vector3(0.04f, 0.04f, 0.04f));
+            vSlider = CreateSlider("timer", new Vector3(-63.004f, 12.68741f, -82.347f), Quaternion.Euler(0f, -127.393f, 0), new Vector3(0.04f, 0.04f, 0.04f));
 
             // Text initialization
             curText = CreateText(bPause.transform, new Vector3(0f, 0f, 0.66f), Quaternion.identity, new Vector3(-0.019f, 0.04522476f, 0.04522476f));
@@ -69,44 +73,40 @@ namespace MonkeTV.Behaviours
             VideoPlay();
         }
 
-        // I'm very unfamiliar with IEnumerator interface stuffs so very sorry if this makes your eyes burn on fire
-        internal IEnumerator ShowMessage(string msg)
+        public void ShowMessageMethod(string msg)
         {
-            cDisplay++;
-            int curDisplay = cDisplay;
+            if (iEnum != null) StopCoroutine(iEnum);
+
+            ReportedTime = Time.time;
+            iEnum = ShowMessage(msg);
+            StartCoroutine(iEnum);
+        }
+
+        private IEnumerator ShowMessage(string msg)
+        {
+            float rTime = ReportedTime;
             float val = 0;
             for(int i = 0; i < 5; i++)
             {
-                if (cDisplay != curDisplay) yield break;
-                else
-                {
-                    tvInfo.text = msg;
-                    tvInfo.color = new Color(1, 1, 1, val);
-                    val += 0.1f * 2;
-                    yield return new WaitForSeconds(0.025f);
-                }
-
-                tvInfo.color = Color.white;
+                tvInfo.text = msg;
+                tvInfo.color = new Color(1, 1, 1, val);
+                val += 0.1f * 2;
+                yield return new WaitForSeconds(0.025f);
             }
-            if (cDisplay == curDisplay)
+            
+            if (ReportedTime != rTime) yield break;
+
+            tvInfo.color = Color.white;
+            yield return new WaitForSeconds(1f);
+            for (int i = 0; i < 10; i++)
             {
-                yield return new WaitForSeconds(1f);
-                if (cDisplay == curDisplay)
-                {
-                    for (int i = 0; i < 10; i++)
-                    {
-                        if (cDisplay != curDisplay) yield break;
-                        else
-                        {
-                            tvInfo.color = new Color(1, 1, 1, val);
-                            val -= 0.1f;
-                            yield return new WaitForSeconds(0.025f);
-                        }
-                    }
-
-                    tvInfo.color = Color.clear;
-                }
+                tvInfo.color = new Color(1, 1, 1, val);
+                val -= 0.1f;
+                yield return new WaitForSeconds(0.025f);
             }
+
+            if (ReportedTime != rTime) yield break;
+            tvInfo.color = Color.clear;
 
             yield break;
         }
@@ -208,6 +208,7 @@ namespace MonkeTV.Behaviours
             sObject.GetComponent<BoxCollider>().isTrigger = true;
             sObject.AddComponent<Slider>().mPlier = 2.58123f;
             if (sName is "volume") sObject.AddComponent<VolumeSlider>();
+            else if (sName is "timer") sObject.AddComponent<TimeSlider>();
 
             return sObject;
         }
@@ -238,8 +239,8 @@ namespace MonkeTV.Behaviours
             // Nevermind
             var tSource = tPlayer.gameObject.AddComponent<AudioSource>();
             tSource.spatialBlend = 1;
-            tSource.minDistance = 2;
-            tSource.maxDistance = 6.5f;
+            tSource.minDistance = 2f;
+            tSource.maxDistance = 8f;
             tSource.rolloffMode = AudioRolloffMode.Linear;
             tPlayer.audioOutputMode = VideoAudioOutputMode.AudioSource;
             tPlayer.SetTargetAudioSource(0, tSource);
@@ -250,36 +251,38 @@ namespace MonkeTV.Behaviours
             SetURL();
             tPlayer.Play();
             curText.text = tPlayer.isPaused ? "PAUSED" : "PLAYING";
-            StartCoroutine(ShowMessage($"PLAYING {vidNames[currentlySeclected].ToString().ToUpper()}"));
+            StartCoroutine(ShowMessage($"PLAYING {vidNames[currentlySelected].ToString().ToUpper()}"));
         }
 
         internal void SetURL()
         {
             // Patch currentlySelected variable if the video doesn't exists
-            if (currentlySeclected < 0) currentlySeclected = vidNames.Count - 1;
-            else if (currentlySeclected > vidNames.Count - 1) currentlySeclected = 0;
+            if (currentlySelected < 0) currentlySelected = vidNames.Count - 1;
+            else if (currentlySelected > vidNames.Count - 1) currentlySelected = 0;
 
             // Okay now set the damn url
-            tPlayer.url = fLocation + "\\Videos\\" + vidNames[currentlySeclected];
+            tPlayer.url = fLocation + "\\Videos\\" + vidNames[currentlySelected];
         }
 
         public void VideoPlayForward()
         {
-            currentlySeclected++;
+            currentlySelected++;
             VideoPlay();
         }
 
         public void VideoPlayBackward()
         {
-            currentlySeclected--;
+            currentlySelected--;
             VideoPlay();
         }
 
         public void VideoPause()
         {
-            if (tPlayer.isPaused is true) tPlayer.Play(); else tPlayer.Pause();
-            curText.text = tPlayer.isPaused ? "PAUSED" : "PLAYING";
-            StartCoroutine(ShowMessage(tPlayer.isPaused ? "PAUSED" : "RESUMED"));
+            if (isPaused) tPlayer.Play(); else tPlayer.Pause();
+            isPaused = tPlayer.isPaused;
+
+            curText.text = isPaused ? "PAUSED" : "PLAYING";
+            StartCoroutine(ShowMessage(isPaused ? "PAUSED" : "RESUMED"));
         }
     }
 }

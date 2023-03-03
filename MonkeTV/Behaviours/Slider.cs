@@ -10,6 +10,11 @@ namespace MonkeTV.Behaviours
 
         internal void Start() => yPos = transform.position.y;
         internal void LateUpdate() => fValue = 1 - ((yPos - transform.position.y) * mPlier);
+
+        public float _Position(float _fValue, float bigValue, float smallValue)
+        {
+            return (bigValue - smallValue) * _fValue;
+        }
     }
 
 }

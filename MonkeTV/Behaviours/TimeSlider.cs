@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace MonkeTV.Behaviours
 {
-    public class VolumeSlider : MonoBehaviour
+    public class TimeSlider : MonoBehaviour
     {
         internal GorillaPressableButton baseButton;
         internal Renderer baseRenderer;
@@ -40,6 +40,16 @@ namespace MonkeTV.Behaviours
             }
         }
 
+        internal void SetVolume(float volume)
+        {
+            float fixedLength = (float)Plugin.Instance.tClass.tPlayer.length;
+            float time = fixedLength - (volume * fixedLength);
+            Plugin.Instance.tClass.tPlayer.time = time;
+            float minutes = Mathf.FloorToInt(time / 60);
+            float seconds = Mathf.FloorToInt(time % 60);
+            Plugin.Instance.tClass.ShowMessageMethod(string.Concat("TIME: ", string.Format("{0:00}:{1:00}", minutes, seconds)));
+        }
+
         internal void Update()
         {
             if (colliders.Count > 0)
@@ -59,12 +69,16 @@ namespace MonkeTV.Behaviours
                         colliders.Remove(collider);
 
                         if (colliders.Count is 0) cDrag = false;
-                        if (cDrag is false)
-                        {
-                            Plugin.Instance.tClass.tPlayer.GetTargetAudioSource(0).volume = GetComponent<Slider>().fValue;
-                            Plugin.Instance.tClass.ShowMessageMethod(string.Concat("VOLUME: ", Mathf.RoundToInt(GetComponent<Slider>().fValue * 100), "%"));
-                        }
+                        if (cDrag is false) SetVolume(GetComponent<Slider>().fValue);
                     }
+                }
+            }
+            else
+            {
+                if (!cDrag)
+                {
+                    float yPos = 12.68741f - GetComponent<Slider>()._Position((float)Plugin.Instance.tClass.tPlayer.time / (float)Plugin.Instance.tClass.tPlayer.length, 12.68741f, 12.30003f);
+                    gameObject.transform.position = new Vector3(gameObject.transform.position.x, yPos, gameObject.transform.position.z);
                 }
             }
         }
